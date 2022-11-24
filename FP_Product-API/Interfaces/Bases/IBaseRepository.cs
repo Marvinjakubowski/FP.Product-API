@@ -1,6 +1,6 @@
 ﻿namespace FP_Product_API.Interfaces.Base
 {
-    public interface IBaseSerializer<T>
+    public interface IBaseRepository<T>
     {
         T Serialize();
     }

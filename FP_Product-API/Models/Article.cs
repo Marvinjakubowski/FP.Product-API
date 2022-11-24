@@ -1,11 +1,12 @@
 ﻿using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace FP_Product_API.Models
 {
     public class Article
     {
         public int Id { get; set; }
-        public string? ShortDescription 
+        public string ShortDescription 
         {
             get
             {
@@ -14,14 +15,14 @@ namespace FP_Product_API.Models
             set
             {
                 ShortDescription = value;
-                int indexOfEnd = this.PricePerUnitText.IndexOf('x');
-                if (int.TryParse(PricePerUnitText.Substring(0, (indexOfEnd) - 1), out int count))
+                Regex regex = new Regex(@"\d{1,}[ ]");
+                Match match = regex.Match(value);
+                if(match.Success)
                 {
-                    BottleCount = count;
-                }
-                else
-                {
-                    BottleCount = null;
+                    if (int.TryParse(match.Value, out int count))
+                    {
+                        BottleCount = count;
+                    }
                 }
             }
         }
@@ -36,15 +37,14 @@ namespace FP_Product_API.Models
             set 
             {
                 PricePerUnitText = value;
-                int indexOfStart = 1;
-                int indexOfEnd = this.PricePerUnitText.IndexOf('€');
-                if(double.TryParse(PricePerUnitText.Substring(indexOfStart,(indexOfEnd)-1), out double pricePerUnit))
+                Regex regex = new Regex(@"\d{1,6},\d{2}");
+                Match match = regex.Match(value);
+                if (match.Success)
                 {
-                    PricePerUnitDouble = pricePerUnit;
-                }
-                else
-                {
-                    PricePerUnitDouble = null;
+                    if (double.TryParse(match.Value, out double pricePerUnit))
+                    {
+                        PricePerUnitDouble = pricePerUnit;
+                    }
                 }
             } 
         }

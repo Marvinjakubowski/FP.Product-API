@@ -42,9 +42,9 @@ namespace FP_Product_API.Controllers
         }
 
         [HttpGet("ProductData/GetMostExpensiveCheapestProduct")]
-        public ProductData GetMostExpensiveProduct([FromBody] IEnumerable<ProductData> data)
+        public MostExpensiveCheapestProduct GetMostExpensiveProduct([FromBody] IEnumerable<ProductData> data)
         {
-            return _productService.MostExpensiveCheapestProduct(data);
+            return _productService.GetMostExpensiveCheapestProduct(data);
         }
 
         [HttpGet("ProductData/SearchProductsByPrice")]

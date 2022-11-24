@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using FP_Product_API.Interfaces.ProductDatas;
 using FP_Product_API.Interfaces.Services;
 using FP_Product_API.Models;
 using Microsoft.AspNetCore.Http;

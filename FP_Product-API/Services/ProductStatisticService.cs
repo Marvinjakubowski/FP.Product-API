@@ -17,8 +17,7 @@ namespace FP_Product_API.Services
         {
             ProductStatistic statistic = new ProductStatistic();
             statistic.ProductWithMostBottles = _productService.MostBottles(data);
-            statistic.CheapestProduct = _productService.CheapestProduct(data);
-            statistic.MostExpensiveProduct = _productService.MostExpensiveProduct(data);
+            statistic.MostExpensiveCheapestProduct = _productService.GetMostExpensiveCheapestProduct(data);
             statistic.ProductsByDefaultPrice = _productService.SearchProductsByDefaultPrice(data);
             return statistic;
         }

@@ -1,17 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
-using FP_Product_API.Interfaces.ProductDatas;
 using FP_Product_API.Interfaces.Services;
 using FP_Product_API.Models;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace FP_Product_API.Services
 {
     public class ProductService : IProductService
     {
         private const double Default_Price = 17.99;
+        private const string Default_JsonLink = "https://flapotest.blob.core.windows.net/test/ProductData.json";
+        private readonly ILogger<ProductService> _logger;
 
-        public ProductService() {
+        public ProductService(ILogger<ProductService> logger) {
+            _logger = logger;
         }
 
         public ProductData? Get(int id, IEnumerable<ProductData> data)
@@ -21,7 +27,7 @@ namespace FP_Product_API.Services
 
         public IEnumerable<ProductData> GetDefaultProductData()
         {
-            throw new System.NotImplementedException();
+            return GetDefaultDataWithHttpClient();
         }
 
         public ProductData MostBottles(IEnumerable<ProductData> data)
@@ -67,7 +73,37 @@ namespace FP_Product_API.Services
             return productdata;
         }
 
+        private IEnumerable<ProductData> GetDefaultDataWithHttpClient()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                var response = client.GetAsync(Default_JsonLink).GetAwaiter().GetResult();
+                if (response.IsSuccessStatusCode)
+                {
+                    var productData = JsonConvert.DeserializeObject<List<ProductData>>(response.Content.ReadAsStringAsync().GetAwaiter().GetResult());
 
+                    if (productData == null)
+                    {
+                        _logger.LogInformation(
+                            "Deserializeatuin was not sucessfull. Message:{Content}",
+                            new { response.Content });
+
+                        return new List<ProductData>();
+                    }
+                    _logger.LogInformation(
+                        "Request was sucessfull. Code:{StatusCode} Message:{Content}",
+                        new { response.StatusCode, response.Content });
+
+                    return productData;
+                }
+                else
+                {
+                    _logger.LogWarning("Code:{StatusCode} Message:{Message}", new { response.StatusCode, response.ReasonPhrase });
+                }
+
+            }
+            return new List<ProductData>();
+        }
         private List<Article> QuickSortPrice(List<Article> articles)
         {
             if (articles.Count <= 1) return articles;
