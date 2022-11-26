@@ -1,4 +1,6 @@
+using FP_Product_API.Interfaces.Repository;
 using FP_Product_API.Interfaces.Services;
+using FP_Product_API.Serializer;
 using FP_Product_API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,9 +15,9 @@ namespace FP_Product_API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddTransient<IProductService, ProductService>();
+            builder.Services.AddTransient<IProductDataService, ProductDataService>();
             builder.Services.AddTransient<IProductStatisticService, ProductStatisticService>();
-
+            builder.Services.AddTransient<IProductDataRepository, ProductDataRepository>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -28,7 +30,7 @@ namespace FP_Product_API
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
+                app.UseSwagger( );
                 app.UseSwaggerUI();
             }
 

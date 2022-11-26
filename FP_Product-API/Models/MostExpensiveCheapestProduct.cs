@@ -6,7 +6,13 @@ namespace FP_Product_API.Models
 {
     public class MostExpensiveCheapestProduct
     {
-        public ProductData? MostExpensiveProduct { get; set; }
-        public ProductData? CheapestProduct { get; set; }
+        public IEnumerable<ProductData> MostExpensiveProduct { get; set; }
+        public IEnumerable<ProductData> CheapestProduct { get; set; }
+
+        public MostExpensiveCheapestProduct() 
+        {
+            MostExpensiveProduct = new List<ProductData>();
+            CheapestProduct = new List<ProductData>();
+        }
     }
 }

@@ -6,5 +6,6 @@ namespace FP_Product_API.Interfaces.Services
     public interface IProductStatisticService
     {
         ProductStatistic GetProductStatistic(IEnumerable<ProductData> data);
+        ProductStatistic GetProductStatistic(string? url);
     }
 }

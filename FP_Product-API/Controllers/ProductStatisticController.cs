@@ -11,18 +11,22 @@ namespace FP_Product_API.Controllers
     [Route("api/[controller]")]
     public class ProductStatisticController : ControllerBase
     {
-        private readonly ILogger<ProductStatisticController> _logger;
         private readonly IProductStatisticService _productStatisticService;
 
         public ProductStatisticController(
-            ILogger<ProductStatisticController> logger,
             IProductStatisticService productStatisticService)
         {
-            _logger = logger;
             _productStatisticService = productStatisticService;
         }
 
         [HttpGet("ProductData/GetStatistics")]
+        public ProductStatistic GetStatistics(string? url)
+        {
+            return _productStatisticService.GetProductStatistic(url);
+        }
+
+
+        [HttpPost("ProductData/GetStatistics")]
         public ProductStatistic GetStatistics([FromBody] IEnumerable<ProductData> data)
         {
             return _productStatisticService.GetProductStatistic(data);

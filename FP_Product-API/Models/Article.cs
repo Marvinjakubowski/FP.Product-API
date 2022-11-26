@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace FP_Product_API.Models
@@ -6,15 +7,17 @@ namespace FP_Product_API.Models
     public class Article
     {
         public int Id { get; set; }
+        [JsonIgnore]
+        private string _ShortDescription { get; set; }
         public string ShortDescription 
         {
             get
             {
-                return this.ShortDescription;
+                return _ShortDescription;
             }
             set
             {
-                ShortDescription = value;
+                _ShortDescription = value;
                 Regex regex = new Regex(@"\d{1,}[ ]");
                 Match match = regex.Match(value);
                 if(match.Success)
@@ -28,20 +31,22 @@ namespace FP_Product_API.Models
         }
         public double Price { get; set; }
         public string? Unit { get; set; }
+        [JsonIgnore]
+        private string _PricePerUnitText { get; set; }
         public string PricePerUnitText 
         { 
             get
             {
-                return this.PricePerUnitText;
+                return _PricePerUnitText;
             }
             set 
             {
-                PricePerUnitText = value;
+                _PricePerUnitText = value;
                 Regex regex = new Regex(@"\d{1,6},\d{2}");
                 Match match = regex.Match(value);
                 if (match.Success)
                 {
-                    if (double.TryParse(match.Value, out double pricePerUnit))
+                    if (double.TryParse(match.Value.Replace(',','.'), out double pricePerUnit))
                     {
                         PricePerUnitDouble = pricePerUnit;
                     }
@@ -51,9 +56,13 @@ namespace FP_Product_API.Models
         [JsonIgnore]
         public double? PricePerUnitDouble { get; private set; }
         [JsonIgnore]
-        public int? BottleCount { get; private set; }
-
+        public int BottleCount { get; private set; }
         public string? Image { get; set; }
+        public Article()
+        {
+            _PricePerUnitText = "";
+            _ShortDescription = "";
+        }
 
     }
 }
