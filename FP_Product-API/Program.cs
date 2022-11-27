@@ -27,18 +27,13 @@ namespace FP_Product_API
             SwaggerGenInitialze(builder);
 
             var app = builder.Build();
-
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
 
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("v1/swagger.json", "Product-API V1");
-                });
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("v1/swagger.json", "Product-API V1");
+            });
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
