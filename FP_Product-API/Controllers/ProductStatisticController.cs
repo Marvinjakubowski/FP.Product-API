@@ -18,18 +18,35 @@ namespace FP_Product_API.Controllers
         {
             _productStatisticService = productStatisticService;
         }
+        #region HttpGet
 
+        /// <summary>
+        /// Gets the following statistics: MostBootles, MostExpensiveAndCheapeastProduct, ProductDataByDefaultPrice, 
+        /// Data is provided from: "https://flapotest.blob.core.windows.net/test/ProductData.json" or a custom url
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         [HttpGet("ProductData/GetStatistics")]
         public ProductStatistic GetStatistics(string? url)
         {
             return _productStatisticService.GetProductStatistic(url);
         }
+        #endregion
 
+        #region HttpPost
 
+        /// <summary>
+        /// Gets the following statistics: MostBootles, MostExpensiveAndCheapeastProduct, ProductDataByDefaultPrice, 
+        /// Data is provided from: "https://flapotest.blob.core.windows.net/test/ProductData.json" or a custom json
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost("ProductData/GetStatistics")]
         public ProductStatistic GetStatistics([FromBody] IEnumerable<ProductData> data)
         {
             return _productStatisticService.GetProductStatistic(data);
         }
+        #endregion
+
     }
 }

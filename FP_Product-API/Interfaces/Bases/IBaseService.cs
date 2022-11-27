@@ -8,6 +8,6 @@ namespace FP_Product_API.Interfaces.Base
     {
         T? Get(int id, string? url);
         T? Get(int id, IEnumerable<ProductData>? data);
-        IEnumerable<T>? GetData(string? url);
+        IEnumerable<T>? GetObjectData(string? url);
     }
 }

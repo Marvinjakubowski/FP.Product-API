@@ -37,51 +37,68 @@ namespace FP_Product_API.Services
             return defaultdata.FirstOrDefault(x => x.Id == id);
         }
 
-        public IEnumerable<ProductData> GetData(string? url)
+        public IEnumerable<ProductData> GetObjectData(string? url)
         {
             return _productDataRepository.GetData(url);
         }
         private IEnumerable<ProductData> GetDataToUse(IEnumerable<ProductData>? data)
         {
-            return data ?? GetData(null);
+            return data ?? GetObjectData(null);
         }
         public IEnumerable<ProductData> MostBottles(IEnumerable<ProductData>? data = null)
         {
             var usedData = GetDataToUse(data);
             List<Article> articles = new List<Article>();
-            if (usedData != null)
+            if (usedData?.Count() > 0)
             {
                 usedData.ToList().ForEach(x => articles.AddRange(x.Articles));
-                articles = QuickSort(articles, nameof(Article.BottleCount));
-                var articlesWithMostBottles = articles.Where(article => article.BottleCount == articles.Last().BottleCount).ToList();
-                return GetProductDataWithMultipleArticle(usedData, articlesWithMostBottles);
+                if (articles?.Count() > 0)
+                {
+                    articles = QuickSort(articles, nameof(Article.BottleCount));
+
+                    var articlesWithMostBottles = articles.Where(article => article.BottleCount == articles.Last().BottleCount).ToList();
+                    return GetProductDataWithMultipleArticle(usedData, articlesWithMostBottles);
+                }
+                throw CreateLogHttpExpeption(
+                    "No article were found in the given data, request is aborted",
+                    HttpStatusCode.BadRequest);
             }
-            return new List<ProductData>();
+            throw CreateLogHttpExpeption(
+               "No ProductData were found in the given data, request is aborted",
+               HttpStatusCode.BadRequest);
         }
         public IEnumerable<ProductData> MostBottles(string? url)
         {
-            var usedData = GetData(url);
+            var usedData = GetObjectData(url);
             return MostBottles(usedData);
         }
         public MostExpensiveCheapestProduct GetMostExpensiveCheapestProduct(IEnumerable<ProductData>? data = null)
         {
             var usedData = GetDataToUse(data);
             List<Article> articles = new List<Article>();
-            if (usedData != null)
+            if (usedData?.Count() > 0)
             {
                 usedData.ToList().ForEach(x => articles.AddRange(x.Articles));
-                articles = QuickSort(articles, nameof(Article.Price));
-                return new MostExpensiveCheapestProduct
+                if (articles?.Count() > 0)
                 {
-                    MostExpensiveProduct = GetProductDataWithMultipleArticle(
-                        usedData,
-                        articles.Where(article => article.Price == articles.Last().Price).ToList()),
-                    CheapestProduct = GetProductDataWithMultipleArticle(
-                        usedData,
-                        articles.Where(article => article.Price == articles.First().Price).ToList())
-                };
+                    articles = QuickSort(articles, nameof(Article.Price));
+                    return new MostExpensiveCheapestProduct
+                    {
+                        MostExpensiveProduct = GetProductDataWithMultipleArticle(
+                            usedData,
+                            articles.Where(article => article.Price == articles.Last().Price).ToList()),
+                        CheapestProduct = GetProductDataWithMultipleArticle(
+                            usedData,
+                            articles.Where(article => article.Price == articles.First().Price).ToList())
+                    };
+                }
+                throw CreateLogHttpExpeption(
+                    "No article were found in the given data, request is aborted", 
+                    HttpStatusCode.BadRequest);
             }
-            return new MostExpensiveCheapestProduct();
+            throw CreateLogHttpExpeption(
+                "No entries for articles were found in the given data, request is aborted",
+                HttpStatusCode.BadRequest);
         }
        
         private ProductData GetProductDataWithSingleArticle (IEnumerable<ProductData> data, Article article)
@@ -115,7 +132,7 @@ namespace FP_Product_API.Services
         }
         public MostExpensiveCheapestProduct GetMostExpensiveCheapestProduct(string? url)
         {
-            var usedData = GetData(url);
+            var usedData = GetObjectData(url);
             return GetMostExpensiveCheapestProduct(usedData);
         }
         public IEnumerable<ProductData> SearchProductsByDefaultPrice(IEnumerable<ProductData>? data = null)
@@ -124,7 +141,7 @@ namespace FP_Product_API.Services
         }
         public IEnumerable<ProductData> SearchProductsByDefaultPrice(string? url)
         {
-            var usedData = GetData(url);
+            var usedData = GetObjectData(url);
             return SearchProductsByDefaultPrice(usedData);
         }
         public IEnumerable<ProductData> SearchProductsByPrice(double Price, IEnumerable<ProductData>? data = null )
@@ -143,22 +160,31 @@ namespace FP_Product_API.Services
         }
         public IEnumerable<ProductData> SearchProductsByPrice(double Price, string? url)
         {
-            var usedData = GetData(url);
+            var usedData = GetObjectData(url);
             return SearchProductsByPrice(Price, usedData);
         }
 
         private List<Article> QuickSort(List<Article> articles, string propertyString)
         {
             var property = typeof(Article).GetProperty(propertyString);
-            if (property == null ) { throw new Exception(); }
+            if (property == null ) 
+            { 
+                throw CreateLogHttpExpeption(
+                    $"No property found with the name {propertyString}",
+                    HttpStatusCode.InternalServerError); 
+            }
+
             if (articles.Count <= 1) return articles;
 
             int pivotPosition = articles.Count / 2;
             double pivotValue = articles[pivotPosition].Price;
             Article pivotArticle = articles[pivotPosition];
+
             articles.RemoveAt(pivotPosition);
+
             List<Article> smaller = new List<Article>();
             List<Article> greater = new List<Article>();
+
             foreach (Article article in articles)
             {
                 string? propertyvalue = property.GetValue(article, null)?.ToString();
@@ -175,18 +201,25 @@ namespace FP_Product_API.Services
                 }
                 else
                 {
-                    _logger.LogError("Could not parse the following value to double value:{value} ArticleId:{id} , Quicksort arborted.",
-                        propertyvalue,
-                        article.Id);
+                    throw CreateLogHttpExpeption(
+                        $"Could not parse the following value to double value:{propertyvalue} ArticleId:{article.Id} , Quicksort arborted.",
+                        HttpStatusCode.BadRequest);
                 }
             }
+
             List<Article> sorted = QuickSort(smaller, propertyString);
             sorted.Add(pivotArticle);
             sorted.AddRange(QuickSort(greater, propertyString));
+
             return sorted;
         }
 
-
+        private HttpRequestException CreateLogHttpExpeption(string message, HttpStatusCode code)
+        {
+            var httpException = new HttpRequestException(message, null, code);
+            _logger.LogError(httpException, httpException.Message);
+            return httpException;
+        }
 
 
     }
