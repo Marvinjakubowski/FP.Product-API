@@ -10,30 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="bin\Debug\net6.0\appsettings.Development.json" />
-    <Content Include="bin\Debug\net6.0\appsettings.json" />
-    <Content Include="bin\Debug\net6.0\FP.Product-API.deps.json" />
-    <Content Include="bin\Debug\net6.0\FP.Product-API.runtimeconfig.json" />
-    <Content Include="bin\Debug\net6.0\FP.Product-API.xml" />
-    <Content Include="bin\Debug\net6.0\FP_Product-API.deps.json" />
-    <Content Include="bin\Debug\net6.0\FP_Product-API.runtimeconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="bin\Debug\net6.0\FP.Product-API.dll" />
-    <None Include="bin\Debug\net6.0\FP.Product-API.exe" />
-    <None Include="bin\Debug\net6.0\FP.Product-API.pdb" />
-    <None Include="bin\Debug\net6.0\FP_Product-API.dll" />
-    <None Include="bin\Debug\net6.0\FP_Product-API.exe" />
-    <None Include="bin\Debug\net6.0\FP_Product-API.pdb" />
-    <None Include="bin\Debug\net6.0\Microsoft.OpenApi.dll" />
-    <None Include="bin\Debug\net6.0\Newtonsoft.Json.dll" />
-    <None Include="bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll" />
-    <None Include="bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll" />
-    <None Include="bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
