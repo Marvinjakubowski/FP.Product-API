@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FP.Product-API</name>
+    </assembly>
+    <members>
+        <member name="M:FP_Product_API.Controllers.ProductDataController.GetProductData(System.String)">
+            <summary>
+            Gets a list of ProductData by the default url("https://flapotest.blob.core.windows.net/test/ProductData.json") or a custom url
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductDataController.GetById(System.Int32,System.String)">
+            <summary>
+            Trys to get an entry from the default ProductData-List or an given url
+            </summary>
+            <param name="Id"></param>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductDataController.ProductWithMostBottles(System.String)">
+            <summary>
+            Gets the products with the most bottles, shows multiple entrys if they have the same amount.
+            Data is used from the default ProductData-List or an given url
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductDataController.GetMostExpensiveProduct(System.String)">
+            <summary>
+            Gets the most expensive/cheapest products , shows multiple entrys if they have the same price.
+            Data is used from the default ProductData-List or an given url
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductDataController.SearchProductsByPrice(System.Double,System.String)">
+            <summary>
+            Gets the products with a given price, shows multiple entrys if they have the same amount (orderd by price per litre).
+            Data is used from the default ProductData-List or an given url
+            </summary>
+            <param name="url"></param>
+            <param name="price"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductDataController.SearchProductsByDefaultPrice(System.String)">
+            <summary>
+            Gets the products with the price 17.99, shows multiple entrys if they have the same amount (orderd by price per litre).
+            Data is used from the default ProductData-List or an given url
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductDataController.GetById(System.Int32,System.Collections.Generic.IEnumerable{FP_Product_API.Models.ProductData})">
+            <summary>
+            Trys to get an entry from the default ProductData-List or an given json
+            </summary>
+            <param name="Id"></param>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductDataController.ProductWithMostBottles(System.Collections.Generic.IEnumerable{FP_Product_API.Models.ProductData})">
+            <summary>
+            Gets the products with the most bottles, shows multiple entrys if they have the same amount.
+            Data is used from the default ProductData-List or an given json
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductDataController.GetMostExpensiveProduct(System.Collections.Generic.IEnumerable{FP_Product_API.Models.ProductData})">
+            <summary>
+            Gets the most expensive/cheapest products, shows multiple entrys if they have the same price.
+            Data is used from the default ProductData-List or an given json
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductDataController.SearchProductsByPrice(System.Double,System.Collections.Generic.IEnumerable{FP_Product_API.Models.ProductData})">
+            <summary>
+            Gets the products with a given price, shows multiple entrys if they have the same amount (orderd by price per litre).
+            Data is used from the default ProductData-List or an given json
+            </summary>
+            <param name="data"></param>
+            <param name="price"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductDataController.SearchProductsByDefaultPrice(System.Collections.Generic.IEnumerable{FP_Product_API.Models.ProductData})">
+            <summary>
+            Gets the products with the price 17.99, shows multiple entrys if they have the same amount (orderd by price per litre). 
+            Data is used from the default ProductData-List or an given json
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductStatisticController.GetStatistics(System.String)">
+            <summary>
+            Gets the following statistics: MostBootles, MostExpensiveAndCheapeastProduct, ProductDataByDefaultPrice, 
+            Data is provided from: "https://flapotest.blob.core.windows.net/test/ProductData.json" or a custom url
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FP_Product_API.Controllers.ProductStatisticController.GetStatistics(System.Collections.Generic.IEnumerable{FP_Product_API.Models.ProductData})">
+            <summary>
+            Gets the following statistics: MostBootles, MostExpensiveAndCheapeastProduct, ProductDataByDefaultPrice, 
+            Data is provided from: "https://flapotest.blob.core.windows.net/test/ProductData.json" or a custom json
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
