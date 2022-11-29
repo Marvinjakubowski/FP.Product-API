@@ -62,7 +62,7 @@ namespace FP_Product_API.Controllers
         /// Gets the most expensive/cheapest products , shows multiple entrys if they have the same price.
         /// Data is used from the default ProductData-List or an given url
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="url" required="true"></param>
         /// <returns></returns>
         [HttpGet("GetMostExpensiveCheapestProduct")]
         public MostExpensiveCheapestProduct GetMostExpensiveProduct(string? url = null)
@@ -77,7 +77,7 @@ namespace FP_Product_API.Controllers
         /// <param name="url"></param>
         /// <param name="price"></param>
         /// <returns></returns>
-        [HttpGet("SearchProductsByPrice")]
+        [HttpGet("SearchProductsByPrice/price/{price}")]
         public IEnumerable<ProductData> SearchProductsByPrice(double price, string? url = null)
         {
             return _productService.SearchProductsByPrice(price, url);

@@ -44,9 +44,9 @@ namespace FP_Product_API
         private static void DependencyIncectionInit(WebApplicationBuilder builder)
         {
             // Add services to the container.
-            builder.Services.AddTransient<IProductDataService, ProductDataService>();
-            builder.Services.AddTransient<IProductStatisticService, ProductStatisticService>();
-            builder.Services.AddTransient<IProductDataRepository, ProductDataRepository>();
+            builder.Services.AddSingleton<IProductDataService, ProductDataService>();
+            builder.Services.AddSingleton<IProductStatisticService, ProductStatisticService>();
+            builder.Services.AddSingleton<IProductDataRepository, ProductDataRepository>();
         }
 
         private static void SwaggerGenInitialze(WebApplicationBuilder builder)

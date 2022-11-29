@@ -25,7 +25,6 @@ namespace FP_Product_API.Services
             _productDataRepository = productDataRepository;
             _logger = logger;
         }
-
         public ProductData? Get(int id, IEnumerable<ProductData>? data)
         {
            var defaultdata = _productDataRepository.GetData(null);
@@ -36,7 +35,6 @@ namespace FP_Product_API.Services
             var defaultdata = _productDataRepository.GetData(null);
             return defaultdata.FirstOrDefault(x => x.Id == id);
         }
-
         public IEnumerable<ProductData> GetObjectData(string? url)
         {
             return _productDataRepository.GetData(url);
@@ -57,7 +55,7 @@ namespace FP_Product_API.Services
                     articles = QuickSort(articles, nameof(Article.BottleCount));
 
                     var articlesWithMostBottles = articles.Where(article => article.BottleCount == articles.Last().BottleCount).ToList();
-                    return GetProductDataWithMultipleArticle(usedData, articlesWithMostBottles);
+                    return GetProductDataWithMultipleArticles(usedData, articlesWithMostBottles);
                 }
                 throw CreateLogHttpExpeption(
                     "No article were found in the given data, request is aborted",
@@ -72,6 +70,11 @@ namespace FP_Product_API.Services
             var usedData = GetObjectData(url);
             return MostBottles(usedData);
         }
+        public MostExpensiveCheapestProduct GetMostExpensiveCheapestProduct(string? url)
+        {
+            var usedData = GetObjectData(url);
+            return GetMostExpensiveCheapestProduct(usedData);
+        }
         public MostExpensiveCheapestProduct GetMostExpensiveCheapestProduct(IEnumerable<ProductData>? data = null)
         {
             var usedData = GetDataToUse(data);
@@ -84,23 +87,22 @@ namespace FP_Product_API.Services
                     articles = QuickSort(articles, nameof(Article.Price));
                     return new MostExpensiveCheapestProduct
                     {
-                        MostExpensiveProduct = GetProductDataWithMultipleArticle(
+                        MostExpensiveProduct = GetProductDataWithMultipleArticles(
                             usedData,
                             articles.Where(article => article.Price == articles.Last().Price).ToList()),
-                        CheapestProduct = GetProductDataWithMultipleArticle(
+                        CheapestProduct = GetProductDataWithMultipleArticles(
                             usedData,
                             articles.Where(article => article.Price == articles.First().Price).ToList())
                     };
                 }
                 throw CreateLogHttpExpeption(
-                    "No article were found in the given data, request is aborted", 
+                    "No article were found in the given data, request is aborted",
                     HttpStatusCode.BadRequest);
             }
             throw CreateLogHttpExpeption(
                 "No entries for articles were found in the given data, request is aborted",
                 HttpStatusCode.BadRequest);
         }
-       
         private ProductData GetProductDataWithSingleArticle (IEnumerable<ProductData> data, Article article)
         {
             ProductData productData = data.First(x => x.Articles.Any(y => y.Id == article.Id));
@@ -112,8 +114,7 @@ namespace FP_Product_API.Services
                 Name = productData.Name,
             };
         }
-
-        private IEnumerable<ProductData> GetProductDataWithMultipleArticle(IEnumerable<ProductData> data, List<Article> articles)
+        private IEnumerable<ProductData> GetProductDataWithMultipleArticles(IEnumerable<ProductData> data, List<Article> articles)
         {
             var productDataResult = new List<ProductData>();
             foreach(Article article in articles)
@@ -130,11 +131,6 @@ namespace FP_Product_API.Services
             }
             return productDataResult;
         }
-        public MostExpensiveCheapestProduct GetMostExpensiveCheapestProduct(string? url)
-        {
-            var usedData = GetObjectData(url);
-            return GetMostExpensiveCheapestProduct(usedData);
-        }
         public IEnumerable<ProductData> SearchProductsByDefaultPrice(IEnumerable<ProductData>? data = null)
         {
             return SearchProductsByPrice(Default_Price, GetDataToUse(data));
@@ -147,12 +143,15 @@ namespace FP_Product_API.Services
         public IEnumerable<ProductData> SearchProductsByPrice(double Price, IEnumerable<ProductData>? data = null )
         {
             var UsedData = GetDataToUse(data);
-            List<ProductData> productdata =
+            List<ProductData> productdata = new List<ProductData>();
                 UsedData.Where(x => x.Articles.Any(y => y.Price == Price)).ToList();
 
-            productdata.ForEach(
-                 product => product.Articles = product.Articles.Where(
-                 article => article.Price == Price).ToList());
+            List<Article>  articles= new List<Article>();
+            UsedData.Where(x => x.Articles.Any(y => y.Price == Price))
+                .ToList()
+                .ForEach(product => articles.AddRange(product.Articles));
+
+            articles.ForEach(article => productdata.Add(GetProductDataWithSingleArticle(UsedData, article)));
 
             productdata = productdata.OrderBy(product => product.Articles.Min(article => article.PricePerUnitDouble)).ToList();
 
@@ -163,7 +162,6 @@ namespace FP_Product_API.Services
             var usedData = GetObjectData(url);
             return SearchProductsByPrice(Price, usedData);
         }
-
         private List<Article> QuickSort(List<Article> articles, string propertyString)
         {
             var property = typeof(Article).GetProperty(propertyString);
@@ -213,14 +211,11 @@ namespace FP_Product_API.Services
 
             return sorted;
         }
-
         private HttpRequestException CreateLogHttpExpeption(string message, HttpStatusCode code)
         {
             var httpException = new HttpRequestException(message, null, code);
             _logger.LogError(httpException, httpException.Message);
             return httpException;
         }
-
-
     }
 }

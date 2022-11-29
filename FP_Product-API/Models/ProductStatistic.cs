@@ -7,7 +7,6 @@ namespace FP_Product_API.Models
         public IEnumerable<ProductData> ProductsByDefaultPrice { get; set; }
         public MostExpensiveCheapestProduct MostExpensiveCheapestProduct { get; set; }
         public IEnumerable<ProductData> ProductWithMostBottles { get; set; }
- 
         public ProductStatistic()
         {
             ProductsByDefaultPrice = new List<ProductData>();

@@ -13,11 +13,11 @@ using Moq;
 
 namespace FP.Product_API.Tests
 {
-    public static class TestsMocks
+    public static class ProductDataRepositoryMocks
     {
         public static Mock<IProductDataRepository> GetProductDataRepositroryMock()
         {
-            var mock = new Mock<IProductDataRepository>();
+            var mock = new Mock<IProductDataRepository>(MockBehavior.Loose);
 
             mock.Setup(_ => _.GetData(
                 It.IsAny<string>())).Returns(TestData.GetDataMock());
@@ -27,14 +27,12 @@ namespace FP.Product_API.Tests
 
         public static Mock<IProductDataRepository> SingleArticleGetProductDataRepositroryMock()
         {
-            var mock = new Mock<IProductDataRepository>();
+            var mock = new Mock<IProductDataRepository>(MockBehavior.Loose);
 
             mock.Setup(_ => _.GetData(
                 It.IsAny<string>())).Returns(TestData.MostExpensiveCheapestProductSingleArticleDataMock());
 
             return mock;
         }
-
-
     }
 }

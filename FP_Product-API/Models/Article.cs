@@ -63,6 +63,5 @@ namespace FP_Product_API.Models
             _PricePerUnitText = "";
             _ShortDescription = "";
         }
-
     }
 }

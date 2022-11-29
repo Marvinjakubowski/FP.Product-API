@@ -9,7 +9,6 @@ namespace FP_Product_API.Models
         public string Name { get; set; }
         public string DescriptionText { get; set; }
         public List<Article> Articles { get; set; }
-
         public ProductData()
         {
             BrandName = "";

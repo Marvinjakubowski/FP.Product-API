@@ -9,7 +9,7 @@
     }
   },
     "profiles": {
-        "FP_Product_API.Dev": {
+        "FP_Product_API": {
             "commandName": "Project",
             "dotnetRunMessages": true,
             "launchBrowser": true,
@@ -17,16 +17,6 @@
             "applicationUrl": "https://localhost:54321",
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
-            }
-        },
-        "FP_Product_API.Prod": {
-            "commandName": "Project",
-            "dotnetRunMessages": true,
-            "launchBrowser": true,
-            "launchUrl": "swagger",
-            "applicationUrl": "https://localhost:54321",
-            "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Production"
             }
         },
         "IIS Express": {
